@@ -24,7 +24,23 @@ warmStrategyCache({
   strategy: pageCache,
 });
 
+offlineFallback({
+  pageFallback: '/index.html' // Make sure it uses the index.html when offline
+});
+
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching
-registerRoute();
+registerRoute(({ request }) => /^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/codemirror\/.+/.test(request.href),
+  new CacheFirst({
+    cacheName: 'codemirror-cache', // Use a distinct cache for our codemirror assets
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
+      }),
+      new ExpirationPlugin({
+        maxAgeSeconds: 30 * 24 * 60 * 60
+      })
+    ]
+  })
+);
