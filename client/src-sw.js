@@ -31,7 +31,7 @@ offlineFallback({
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching
-registerRoute(({ request }) => /^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/codemirror\/.+/.test(request.href),
+registerRoute(({ url }) => /^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/codemirror\/.+/.test(url.href),
   new CacheFirst({
     cacheName: 'codemirror-cache', // Use a distinct cache for our codemirror assets
     plugins: [
