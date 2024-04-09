@@ -15,7 +15,10 @@ module.exports = () => {
       path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
-      new HtmlWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        template: "index.html",
+        favicon: "favicon.ico"
+      }),
       new WebpackPwaManifest({
         short_name: "JATE",
         name: "Just Another Text Editor (JATE)",
@@ -26,18 +29,18 @@ module.exports = () => {
         public_path: "./",
         icons: [
           {
-            src: path.resolve('./src/images/logo.png'),
+            src: './src/images/logo.png',
             sizes: [96, 128, 192, 256, 384, 512],
-            destination: 'icons'
+            destination: 'assets/icons'
           }
-        ]
+        ],
+        fingerprints: false
       }),
       new InjectManifest({
         swSrc: './src-sw.js',
         swDest: 'src-sw.js'
       })
     ],
-
     module: {
       rules: [
         {
