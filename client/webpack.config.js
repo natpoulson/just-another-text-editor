@@ -3,12 +3,9 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const path = require('path');
 const { InjectManifest } = require('workbox-webpack-plugin');
 
-// TODO: Add and configure workbox plugins for a service worker and manifest file.
-// TODO: Add CSS loaders and babel to webpack.
-
 module.exports = () => {
   return {
-    mode: 'development',
+    mode: 'development', // Change in prod...?
     entry: {
       main: './src/js/index.js',
       install: './src/js/install.js'
@@ -18,12 +15,54 @@ module.exports = () => {
       path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
-      
+      new HtmlWebpackPlugin({
+        template: "index.html", // Required to use the existing file, or else it builds its own
+        favicon: "favicon.ico" // Making sure the favicon is included too
+      }),
+      new WebpackPwaManifest({
+        short_name: "JATE",
+        name: "Just Another Text Editor (JATE)",
+        description: "A handy text editor that can be used both online and offline",
+        display: "standalone",
+        orientation: "portrait",
+        background_color: '#ffffff',
+        start_url: "./",
+        publicPath: "./",
+        icons: [
+          {
+            src: './src/images/logo.png',
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: 'assets/icons' // Referenced location in header markup
+          }
+        ],
+        fingerprints: false, // Stops adding HEX prints in file names, so icon paths work
+        filename: 'manifest.json'
+      }),
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js'
+      })
     ],
-
     module: {
       rules: [
-        
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader']
+        },
+        {
+          test: /\.m?js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+              plugins: [
+                '@babel/plugin-transform-runtime',
+                '@babel/plugin-proposal-object-rest-spread'
+              ]
+            }
+          }
+        }
       ],
     },
   };
