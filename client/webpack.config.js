@@ -5,7 +5,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 
 module.exports = () => {
   return {
-    mode: 'development',
+    mode: 'development', // Change in prod...?
     entry: {
       main: './src/js/index.js',
       install: './src/js/install.js'
@@ -16,8 +16,8 @@ module.exports = () => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: "index.html",
-        favicon: "favicon.ico"
+        template: "index.html", // Required to use the existing file, or else it builds its own
+        favicon: "favicon.ico" // Making sure the favicon is included too
       }),
       new WebpackPwaManifest({
         short_name: "JATE",
@@ -31,10 +31,10 @@ module.exports = () => {
           {
             src: './src/images/logo.png',
             sizes: [96, 128, 192, 256, 384, 512],
-            destination: 'assets/icons'
+            destination: 'assets/icons' // Referenced location in header markup
           }
         ],
-        fingerprints: false
+        fingerprints: false // Stops adding HEX prints in file names, so icon paths work
       }),
       new InjectManifest({
         swSrc: './src-sw.js',
