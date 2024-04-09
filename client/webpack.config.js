@@ -25,8 +25,9 @@ module.exports = () => {
         description: "A handy text editor that can be used both online and offline",
         display: "standalone",
         orientation: "portrait",
+        background_color: '#ffffff',
         start_url: "./",
-        public_path: "./",
+        publicPath: "./",
         icons: [
           {
             src: './src/images/logo.png',
@@ -34,7 +35,8 @@ module.exports = () => {
             destination: 'assets/icons' // Referenced location in header markup
           }
         ],
-        fingerprints: false // Stops adding HEX prints in file names, so icon paths work
+        fingerprints: false, // Stops adding HEX prints in file names, so icon paths work
+        filename: 'manifest.json'
       }),
       new InjectManifest({
         swSrc: './src-sw.js',
